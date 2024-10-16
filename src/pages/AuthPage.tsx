@@ -1,18 +1,20 @@
 import React, { useRef, useState } from "react";
 import axios from "axios";
 import { LOGIN_URL, SIGNUP_URL } from "../constants";
-import { Auth } from "../Interfaces/LoginInterface";
+import {
+  AuthInterface,
+  ForgotPwdInterface,
+} from "../Interfaces/LoginInterface";
 
 const AuthPage = () => {
-  const emailRef = useRef<HTMLInputElement | null>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const confirmPasswordRef = useRef<HTMLInputElement>(null);
-  const [isLogin, setIsLogin] = useState<Boolean>(true);
-  const [isForgotPwd, setForgotPwd] = useState<Boolean>(false);
+  const [authType, setAuthType] = useState<String>("Login");
 
   const loginUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const obj: Auth = {
+    const obj: AuthInterface = {
       email: emailRef.current?.value,
       password: passwordRef.current?.value,
       returnSecureToken: true,
@@ -32,7 +34,7 @@ const AuthPage = () => {
       return alert("passwords do not match");
     }
 
-    const obj: Auth = {
+    const obj: AuthInterface = {
       email: emailRef.current?.value,
       password: passwordRef.current?.value,
       returnSecureToken: true,
@@ -46,59 +48,153 @@ const AuthPage = () => {
     }
   };
 
-  const toggleLoginSignup = () => {
-    if (emailRef.current && passwordRef.current && confirmPasswordRef.current) {
+  const forgotPwdUser = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const obj: ForgotPwdInterface = {
+      email: emailRef.current?.value,
+    };
+
+    try {
+      const request = await axios.post(LOGIN_URL, obj);
+      console.log(request);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const toggleAuthType = (type: string) => {
+    if (emailRef.current) {
       emailRef.current.value = "";
+    }
+    if (passwordRef.current) {
       passwordRef.current.value = "";
+    }
+    if (confirmPasswordRef.current) {
       confirmPasswordRef.current.value = "";
     }
-    setIsLogin((prev) => !prev);
+    setAuthType(type);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    if (authType === "Login") {
+      loginUser(e);
+    } else if (authType === "Signup") {
+      signupUser(e);
+    } else if (authType === "ForgotPwd") {
+      forgotPwdUser(e);
+    }
   };
 
   return (
-    <div className="flex w-screen h-screen bg-slate-500 items-center justify-center">
-      <div>
-        <form onSubmit={isLogin ? loginUser : signupUser}>
-          <div className="">
-            <label htmlFor="email">Enter Email</label>
-            <input type="email" id="email" ref={emailRef} required />
+    <div className="flex w-screen h-screen bg-slate-100 items-center justify-center">
+      <div className="bg-slate-50 w-full max-w-lg p-8 shadow-lg">
+        {authType === "Login" && (
+          <h1 className="text-center text-2xl font-semibold">Login</h1>
+        )}
+        {authType === "Signup" && (
+          <h1 className="text-center text-2xl font-semibold">Signup</h1>
+        )}
+        {authType === "ForgotPwd" && (
+          <h1 className="text-center text-2xl font-semibold">
+            Forgot Password
+          </h1>
+        )}
+        <form onSubmit={handleSubmit}>
+          <div className="bg-slate-300 my-5">
+            <input
+              type="email"
+              id="email"
+              ref={emailRef}
+              className="border-2 border-slate-950 border-solid rounded-md w-full p-2"
+              placeholder="Enter email"
+              required
+            />
           </div>
-          {!isForgotPwd && (
-            <div className="">
-              <label htmlFor="password">Enter Password</label>
+          {(authType === "Login" || authType === "Signup") && (
+            <div className="bg-blue-200 my-5">
               <input
                 type="password"
                 id="password"
                 ref={passwordRef}
                 minLength={3}
+                className="border-2 border-slate-950 border-solid rounded-md w-full p-2"
+                placeholder="Enter password"
                 required
               />
             </div>
           )}
-          {!isLogin && !isForgotPwd && (
-            <div className="">
-              <label htmlFor="password">Confirm Password</label>
+          {authType === "Signup" && (
+            <div className="bg-slate-700 my-5">
               <input
                 type="password"
-                id="password"
+                id="confirm-password"
                 ref={confirmPasswordRef}
                 minLength={3}
+                className="border-2 border-slate-950 border-solid rounded-md w-full p-2"
+                placeholder="Confirm password"
                 required
               />
             </div>
           )}
-          {isLogin && !isForgotPwd && <button type="submit">Login</button>}
-          {!isLogin && !isForgotPwd && <button type="submit">Signup</button>}
+          {authType === "Signup" && (
+            <button
+              onClick={() => toggleAuthType("Login")}
+              className="mb-5 hover:text-cyan-500"
+            >
+              Already have an account?
+            </button>
+          )}
+          {authType === "Login" && (
+            <button
+              onClick={() => toggleAuthType("ForgotPwd")}
+              className="mb-5 hover:text-cyan-500"
+            >
+              Forgot password?
+            </button>
+          )}
+          {authType === "Login" && (
+            <button
+              onClick={() => toggleAuthType("Signup")}
+              className="mb-5 hover:text-cyan-500 ml-5"
+            >
+              Create account{" "}
+            </button>
+          )}
+          {authType === "ForgotPwd" && (
+            <button
+              onClick={() => toggleAuthType("Login")}
+              className="mb-5 hover:text-cyan-500"
+            >
+              Remembered Password?{" "}
+            </button>
+          )}
+          <div className="flex justify-evenly">
+            {authType === "Signup" && (
+              <button
+                type="submit"
+                className="p-2 bg-green-200 rounded-md text-lg block hover:bg-green-600 shadow-lg active:bg-violet-300"
+              >
+                Signup
+              </button>
+            )}
+            {authType === "Login" && (
+              <button
+                type="submit"
+                className="p-2 bg-green-200 rounded-md text-lg block hover:bg-green-600 shadow-lg active:bg-violet-300"
+              >
+                Login
+              </button>
+            )}
+            {authType === "ForgotPwd" && (
+              <button
+                type="submit"
+                className="p-2 bg-green-200 rounded-md text-lg block hover:bg-green-600 shadow-lg active:bg-violet-300"
+              >
+                Send Email
+              </button>
+            )}
+          </div>
         </form>
-        {isLogin && !isForgotPwd && (
-          <button onClick={toggleLoginSignup}>Forgot password?</button>
-        )}
-        {isLogin && !isForgotPwd && (
-          <button onClick={toggleLoginSignup}>Create account </button>
-        )}
-        {!isLogin && !isForgotPwd && (
-          <button onClick={toggleLoginSignup}>Already have an account? </button>
-        )}
       </div>
     </div>
   );
