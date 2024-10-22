@@ -1,5 +1,9 @@
 import React, { useRef, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import { LOGIN_URL, SIGNUP_URL } from "../constants";
 import {
   AuthInterface,
@@ -11,6 +15,8 @@ const AuthPage = () => {
   const passwordRef = useRef<HTMLInputElement>(null);
   const confirmPasswordRef = useRef<HTMLInputElement>(null);
   const [authType, setAuthType] = useState<String>("Login");
+  const navigate = useNavigate();
+  const notify = (note: string) => toast(note);
 
   const loginUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -23,15 +29,19 @@ const AuthPage = () => {
     try {
       const request = await axios.post(LOGIN_URL, obj);
       console.log(request);
-    } catch (error) {
+      localStorage.setItem("token", request.data.idToken);
+      navigate("/home/dashboard", { replace: true });
+    } catch (error: any) {
       console.log(error);
+      notify(error.response.data.error.message);
     }
   };
 
   const signupUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (passwordRef.current?.value !== confirmPasswordRef.current?.value) {
-      return alert("passwords do not match");
+      notify("Passwords did not match");
+      return;
     }
 
     const obj: AuthInterface = {
@@ -43,8 +53,11 @@ const AuthPage = () => {
     try {
       const request = await axios.post(SIGNUP_URL, obj);
       console.log(request);
-    } catch (error) {
+      notify("Account Created!");
+      toggleAuthType("Login");
+    } catch (error: any) {
       console.log(error);
+      notify(error.response.data.error.message);
     }
   };
 
@@ -87,6 +100,18 @@ const AuthPage = () => {
 
   return (
     <div className="flex w-screen h-screen bg-slate-100 items-center justify-center">
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       <div className="bg-slate-50 w-full max-w-lg p-8 shadow-lg">
         {authType === "Login" && (
           <h1 className="text-center text-2xl font-semibold">Login</h1>
