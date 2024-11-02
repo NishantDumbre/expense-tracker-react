@@ -3,12 +3,16 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { BACKGROUND_IMG } from "../utils/constants";
 
 import { LOGIN_URL, SIGNUP_URL } from "../constants";
 import {
   AuthInterface,
   ForgotPwdInterface,
-} from "../Interfaces/LoginInterface";
+} from "../utils/interfaces/AuthInterface";
+import Login from "../components/auth/Login";
+import Signup from "../components/auth/Signup";
+import ForgotPwd from "../components/auth/ForgotPwd";
 
 const AuthPage = () => {
   const emailRef = useRef<HTMLInputElement>(null);
@@ -30,7 +34,7 @@ const AuthPage = () => {
       const request = await axios.post(LOGIN_URL, obj);
       console.log(request);
       localStorage.setItem("token", request.data.idToken);
-      navigate("/home/dashboard", { replace: true });
+      navigate("/dashboard", { replace: true });
     } catch (error: any) {
       console.log(error);
       notify(error.response.data.error.message);
@@ -70,6 +74,7 @@ const AuthPage = () => {
     try {
       const request = await axios.post(LOGIN_URL, obj);
       console.log(request);
+      toggleAuthType("Login")
     } catch (error) {
       console.log(error);
     }
@@ -99,7 +104,10 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="flex w-screen h-screen bg-slate-100 items-center justify-center">
+    <div
+      className="h-screen bg-cover bg-fixed flex justify-center items-center text-secondary"
+      style={{ backgroundImage: BACKGROUND_IMG }}
+    >
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -112,114 +120,31 @@ const AuthPage = () => {
         pauseOnHover
         theme="colored"
       />
-      <div className="bg-slate-50 w-full max-w-lg p-8 shadow-lg">
+      <div className="bg-primary w-full md:w-2/5 p-8 shadow-lg rounded-lg">
         {authType === "Login" && (
-          <h1 className="text-center text-2xl font-semibold">Login</h1>
+          <Login
+            emailRef={emailRef}
+            passwordRef={passwordRef}
+            toggleAuthType={toggleAuthType}
+            handleSubmit={handleSubmit}
+          />
         )}
         {authType === "Signup" && (
-          <h1 className="text-center text-2xl font-semibold">Signup</h1>
+          <Signup
+            emailRef={emailRef}
+            passwordRef={passwordRef}
+            confirmPasswordRef={confirmPasswordRef}
+            toggleAuthType={toggleAuthType}
+            handleSubmit={handleSubmit}
+          />
         )}
         {authType === "ForgotPwd" && (
-          <h1 className="text-center text-2xl font-semibold">
-            Forgot Password
-          </h1>
+          <ForgotPwd
+            emailRef={emailRef}
+            toggleAuthType={toggleAuthType}
+            handleSubmit={handleSubmit}
+          />
         )}
-        <form onSubmit={handleSubmit}>
-          <div className="bg-slate-300 my-5">
-            <input
-              type="email"
-              id="email"
-              ref={emailRef}
-              className="border-2 border-slate-950 border-solid rounded-md w-full p-2"
-              placeholder="Enter email"
-              required
-            />
-          </div>
-          {(authType === "Login" || authType === "Signup") && (
-            <div className="bg-blue-200 my-5">
-              <input
-                type="password"
-                id="password"
-                ref={passwordRef}
-                minLength={3}
-                className="border-2 border-slate-950 border-solid rounded-md w-full p-2"
-                placeholder="Enter password"
-                required
-              />
-            </div>
-          )}
-          {authType === "Signup" && (
-            <div className="bg-slate-700 my-5">
-              <input
-                type="password"
-                id="confirm-password"
-                ref={confirmPasswordRef}
-                minLength={3}
-                className="border-2 border-slate-950 border-solid rounded-md w-full p-2"
-                placeholder="Confirm password"
-                required
-              />
-            </div>
-          )}
-          {authType === "Signup" && (
-            <button
-              onClick={() => toggleAuthType("Login")}
-              className="mb-5 hover:text-cyan-500"
-            >
-              Already have an account?
-            </button>
-          )}
-          {authType === "Login" && (
-            <button
-              onClick={() => toggleAuthType("ForgotPwd")}
-              className="mb-5 hover:text-cyan-500"
-            >
-              Forgot password?
-            </button>
-          )}
-          {authType === "Login" && (
-            <button
-              onClick={() => toggleAuthType("Signup")}
-              className="mb-5 hover:text-cyan-500 ml-5"
-            >
-              Create account{" "}
-            </button>
-          )}
-          {authType === "ForgotPwd" && (
-            <button
-              onClick={() => toggleAuthType("Login")}
-              className="mb-5 hover:text-cyan-500"
-            >
-              Remembered Password?{" "}
-            </button>
-          )}
-          <div className="flex justify-evenly">
-            {authType === "Signup" && (
-              <button
-                type="submit"
-                className="p-2 bg-green-200 rounded-md text-lg block hover:bg-green-600 shadow-lg active:bg-violet-300"
-              >
-                Signup
-              </button>
-            )}
-            {authType === "Login" && (
-              <button
-                type="submit"
-                className="p-2 bg-green-200 rounded-md text-lg block hover:bg-green-600 shadow-lg active:bg-violet-300"
-              >
-                Login
-              </button>
-            )}
-            {authType === "ForgotPwd" && (
-              <button
-                type="submit"
-                className="p-2 bg-green-200 rounded-md text-lg block hover:bg-green-600 shadow-lg active:bg-violet-300"
-              >
-                Send Email
-              </button>
-            )}
-          </div>
-        </form>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const Navbar = (props) => {
+const Navbar = () => {
   const navigate = useNavigate();
   const logoutHandler = () => {
     localStorage.removeItem("token");
@@ -10,7 +10,7 @@ const Navbar = (props) => {
 
   return (
     <div className="absolute h-lvh w-2/6 bg-violet-300">
-        <button onClick={props.onToggleNavbar}>Close</button>
+        <button >Close</button>
       <ul>
         <li>
           <Link to="/home/dashboard">Dashboard</Link>

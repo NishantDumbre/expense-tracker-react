@@ -1,0 +1,1 @@
+export const BACKGROUND_IMG = `url(/assets/background.jpg)`

@@ -12,7 +12,7 @@ const Header = () => {
 
   return (
     <React.Fragment>
-      {isShowNav && <Navbar onToggleNavbar={toggleNavbar} />}
+      {isShowNav && <Navbar />}
       <div className="w-full h-16 shadow-md flex justify-between items-center">
         <button className="bg-slate-400 p-2 rounded shadow-md m-7" onClick={toggleNavbar}>Menu</button>
         <div className="flex justify-center items-center">
