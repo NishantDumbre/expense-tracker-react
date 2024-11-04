@@ -1,5 +1,8 @@
 import React from "react";
+import {motion} from 'framer-motion'
+
 import { SignupProps } from "../../utils/interfaces/AuthInterface";
+import { AUTH_DIV_ANIMATION } from "../../utils/animations";
 
 const Signup: React.FC<SignupProps> = ({
   emailRef,
@@ -9,7 +12,7 @@ const Signup: React.FC<SignupProps> = ({
   handleSubmit,
 }) => {
   return (
-    <>
+    <motion.div  className="bg-formBg w-full md:w-2/5 p-8 shadow-lg rounded-lg border border-formBorder border-solid" {...AUTH_DIV_ANIMATION} >
       <h1 className="text-center text-2xl font-semibold pb-5">
         Create Account
       </h1>
@@ -46,7 +49,7 @@ const Signup: React.FC<SignupProps> = ({
         <div className="flex flex-col md:flex-row justify-between items-center">
           <button
             onClick={() => toggleAuthType("Login")}
-            className="mb-5 hover:text-accent"
+            className="mb-5 hover:text-hoverLink active:text-activeLink"
           >
             Already have an account?
           </button>
@@ -54,13 +57,13 @@ const Signup: React.FC<SignupProps> = ({
         <div className="flex justify-evenly">
           <button
             type="submit"
-            className="py-2 px-3 bg-green-200 shadow-lg rounded-md text-lg block hover:bg-green-300 active:bg-accent active:shadow-none"
+            className="py-2 px-3 bg-primaryButton shadow-lg rounded-md text-lg block hover:bg-primaryButton-hover active:bg-primaryButton-active active:shadow-none"
           >
             Signup
           </button>
         </div>
       </form>
-    </>
+    </motion.div>
   );
 };
 
