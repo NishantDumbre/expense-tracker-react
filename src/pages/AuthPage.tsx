@@ -37,7 +37,7 @@ const AuthPage = () => {
       const response = await axios.post(LOGIN_URL, obj);
       const { token } = response.data;
       localStorage.setItem("token", token);
-      dispatch(addUser({token, email:obj.email}));
+      dispatch(addUser({ token, email: obj.email }));
       // navigate("/dashboard", { replace: true });
     } catch (error: any) {
       console.log(error);
@@ -112,6 +112,13 @@ const AuthPage = () => {
       className="h-screen bg-cover bg-fixed flex justify-center items-center text-primaryText"
       style={{ backgroundImage: BACKGROUND_IMG }}
     >
+      <div className=" w-screen h-screen top-0 left-0 absolute -z-10">
+        <img
+          src={BACKGROUND_IMG}
+          alt="Background Image"
+          className="fixed  object-cover"
+        />
+      </div>
       <div className="grid grid-cols-3 gap-4">
         <div className="bg-primaryButton h-24">Primary Button</div>
         <div className="bg-secondaryButton h-24">Secondary Button</div>

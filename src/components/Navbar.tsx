@@ -15,7 +15,7 @@ const Navbar:React.FC<NavbarProps> = ({toggleNavbar}) => {
   };
 
   return (
-    <div className="absolute z-20 h-lvh w-2/6 bg-violet-300">
+    <div className="absolute z-30 h-lvh w-2/6 bg-violet-300">
         <button onClick={toggleNavbar} >Close</button>
       <ul>
         <li>

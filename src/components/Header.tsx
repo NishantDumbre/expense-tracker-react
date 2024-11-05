@@ -4,8 +4,9 @@ import Navbar from "./Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreState } from "../utils/redux/appStore";
 import axios from "axios";
-import { GET_USER_DATA_URL } from "../utils/constants";
+import { GET_RECORD_DATA_URL, GET_USER_DATA_URL } from "../utils/constants";
 import { fetchUserData } from "../utils/redux/userSlice";
+import { fetchRecordsDetails } from "../utils/redux/recordsSlice";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -26,10 +27,21 @@ const Header = () => {
   };
 
   const getUserData = async () => {
-    const response = await axios.get(GET_USER_DATA_URL, {
+    const userDataPromise = axios.get(GET_USER_DATA_URL, {
       headers: { Authorization: token },
     });
-    dispatch(fetchUserData(response.data));
+    
+    const recordsDataPromise = axios.get(GET_RECORD_DATA_URL, {
+      headers: { Authorization: token },
+    });
+
+    const [userData, recordsData] = await Promise.all([
+      userDataPromise, recordsDataPromise
+    ])
+
+    dispatch(fetchUserData(userData.data));
+    console.log(recordsData.data)
+    dispatch(fetchRecordsDetails(recordsData.data))
   };
 
   useEffect(() => {
@@ -42,12 +54,12 @@ const Header = () => {
         <>
           <Navbar toggleNavbar={toggleNavbar} />
           <div
-            className="bg-slate-500 h-screen w-screen opacity-40 absolute z-10"
+            className="bg-slate-500 h-screen w-screen opacity-40 absolute z-20"
             onClick={toggleNavbar}
           ></div>
         </>
       )}
-      <div className="absolute w-full h-16 shadow-md flex justify-between items-center text-primaryText bg-formBg">
+      <div className="absolute w-full h-16 shadow-md flex justify-between items-center text-primaryText bg-formBg z-10">
         <button
           className="bg-slate-400 p-2 rounded shadow-md m-7"
           onClick={toggleNavbar}

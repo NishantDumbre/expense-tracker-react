@@ -36,7 +36,7 @@ const userSlice = createSlice({
     },
     fetchUserData: (state, action) => {
       const { name, email, profileUrl, verified, premium } = action.payload;
-      return state = {
+      return (state = {
         ...state,
         details: {
           name,
@@ -45,7 +45,7 @@ const userSlice = createSlice({
         },
         verified,
         premium,
-      };
+      });
     },
   },
 });
