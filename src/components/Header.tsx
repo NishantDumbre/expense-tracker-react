@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
-import { useDispatch, useSelector } from "react-redux";
 import { StoreState } from "../utils/redux/appStore";
 import axios from "axios";
 import { GET_RECORD_DATA_URL, GET_USER_DATA_URL } from "../utils/constants";
 import { fetchUserData } from "../utils/redux/userSlice";
 import { fetchRecordsDetails } from "../utils/redux/recordsSlice";
+import { useSelector } from "react-redux";
+import useGetUserData from "../hooks/useGetUserData";
 
 const Header = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const verified = useSelector((store: StoreState) => store.user.verified);
-  const token = useSelector((store: StoreState) => store.user.token);
   const location = useLocation().pathname;
   const [isShowNav, setIsShowNav] = useState(false);
 
@@ -26,27 +25,28 @@ const Header = () => {
     return updatedLocation;
   };
 
-  const getUserData = async () => {
-    const userDataPromise = axios.get(GET_USER_DATA_URL, {
-      headers: { Authorization: token },
-    });
-    
-    const recordsDataPromise = axios.get(GET_RECORD_DATA_URL, {
-      headers: { Authorization: token },
-    });
+  // const getUserData = async () => {
+  //   const userDataPromise = axios.get(GET_USER_DATA_URL, {
+  //     headers: { Authorization: token },
+  //   });
 
-    const [userData, recordsData] = await Promise.all([
-      userDataPromise, recordsDataPromise
-    ])
+  //   const recordsDataPromise = axios.get(GET_RECORD_DATA_URL, {
+  //     headers: { Authorization: token },
+  //   });
 
-    dispatch(fetchUserData(userData.data));
-    console.log(recordsData.data)
-    dispatch(fetchRecordsDetails(recordsData.data))
-  };
+  //   const [userData, recordsData] = await Promise.all([
+  //     userDataPromise, recordsDataPromise
+  //   ])
+
+  //   dispatch(fetchUserData(userData.data));
+  //   dispatch(fetchRecordsDetails(recordsData.data))
+  // };
+
+  const getUserData = useGetUserData();
 
   useEffect(() => {
     getUserData();
-  }, []);
+  }, [getUserData]);
 
   return (
     <React.Fragment>
@@ -54,7 +54,7 @@ const Header = () => {
         <>
           <Navbar toggleNavbar={toggleNavbar} />
           <div
-            className="bg-slate-500 h-screen w-screen opacity-40 absolute z-20"
+            className="bg-slate-500 h-screen w-screen opacity-40 fixed z-20"
             onClick={toggleNavbar}
           ></div>
         </>

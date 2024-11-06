@@ -9,11 +9,21 @@ export interface UserSliceInterface {
   };
 }
 
+export interface Record {
+  _id: string;
+  money: number;
+  title: string;
+  description: string;
+  category: string;
+  date: string;
+  type: string;
+}
+
 export interface RecordsSliceInterface {
-  status: string,
-  error: null | string,
-  page: number,
-  allRecords: [];
+  status: string;
+  error: null | string;
+  page: number;
+  allRecords: Record[];
   mainRecords: {
     total_balance: number;
     highest_income_value: number;
@@ -43,6 +53,10 @@ export interface AddRecordInterface {
   data: { [key: string]: any };
   formType: string | null;
   token: string | null;
+}
+
+export interface RemoveRecordInterface {
+  _id:string | null;
 }
 
 export interface AddRecordResponse {

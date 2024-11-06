@@ -11,11 +11,11 @@ import { useSelector } from "react-redux";
 import { StoreState } from "../utils/redux/appStore";
 import MainLayout from "../pages/MainLayout";
 import VerifiedDetails from "../pages/VerifiedDetails";
-
+import Premium from "../pages/Premium";
 
 const Body = () => {
-  let token = useSelector((store: StoreState) => store.user.token);
-
+  const token = useSelector((store: StoreState) => store.user.token);
+  const premium = useSelector((store: StoreState) => store.user.premium);
 
   const appRouter = createBrowserRouter([
     {
@@ -34,14 +34,20 @@ const Body = () => {
           path: "/profile",
           element: token ? <Profile /> : <Navigate to="/auth" />,
         },
-        // {
-        //     path:'/premium',
-        //     element: token ? <Premium /> : <Navigate to="/auth" />
-        // },
         {
-          path:'/verify-details',
-          element:<VerifiedDetails />
-        }
+          path: "/premium",
+          element: !token ? (
+            <Navigate to="/auth" />
+          ) : !premium ? (
+            <Navigate to="/dashboard" />
+          ) : (
+            <Premium />
+          ),
+        },
+        {
+          path: "/verify-details",
+          element: <VerifiedDetails />,
+        },
       ],
     },
     {

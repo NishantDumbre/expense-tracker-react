@@ -119,20 +119,6 @@ const AuthPage = () => {
           className="fixed  object-cover"
         />
       </div>
-      <div className="grid grid-cols-3 gap-4">
-        <div className="bg-primaryButton h-24">Primary Button</div>
-        <div className="bg-secondaryButton h-24">Secondary Button</div>
-        <div className="bg-primaryText h-24">Primary Text</div>
-        <div className="bg-secondaryText h-24">Secondary Text</div>
-        <div className="bg-formBg h-24">Form Background</div>
-        <div className="bg-formBorder h-24">Form Border</div>
-        <div className="bg-hoverLink h-24">Hover Link</div>
-        <div className="bg-activeLink h-24">Active Link</div>
-        <div className="bg-lightGold h-24">Light Gold</div>
-        <div className="bg-darkGold h-24">Dark Gold</div>
-        <div className="bg-lightMaroon h-24">Light Maroon</div>
-        <div className="bg-darkMaroon h-24">Dark Maroon</div>
-      </div>
       <ToastContainer
         position="top-right"
         autoClose={5000}

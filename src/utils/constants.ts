@@ -27,6 +27,7 @@ export const VERIFY_EMAIL_URL = 'http://localhost:8080/user/verify-email'
 export const GET_USER_DATA_URL = 'http://localhost:8080/user/get-user-data'
 export const GET_RECORD_DATA_URL = 'http://localhost:8080/expense/get-record-data'
 export const RECORD_EXPENSE_URL = 'http://localhost:8080/expense/add-record'
+export const REMOVE_EXPENSE_URL = 'http://localhost:8080/expense/delete-record'
 
 
 export const EXPENSE_IMAGES = [

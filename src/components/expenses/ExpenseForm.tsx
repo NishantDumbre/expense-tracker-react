@@ -1,9 +1,8 @@
 import React, { useRef } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import {
   EXPENSE_IMAGES,
   INCOME_IMAGES,
-  RECORD_EXPENSE_URL,
 } from "../../utils/constants";
 import { ExpenseFormProps } from "../../utils/interfaces/DashboardInterface";
 import { useDispatch, useSelector } from "react-redux";
@@ -44,9 +43,11 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ formType, onCloseForm }) => {
       const message = formType === "INCOME" ? "Income" : "Expense";
 
       await dispatch(addRecord({ data: obj, formType, token })).unwrap();
-      notify(`Added ${message}`);
 
+      notify(`Added ${message}`);
       onCloseForm();
+      window.location.reload();
+
     } catch (error) {
       console.log(error);
       notify("Got an error");
